@@ -23,6 +23,11 @@ public class BookBean {
         this.availability = availability;
     }
 
+    public BookBean(String bookID, String availability) {
+        this.bookID = bookID;
+        this.availability = availability;
+    }
+
     public String getBookID() {
         return bookID;
     }

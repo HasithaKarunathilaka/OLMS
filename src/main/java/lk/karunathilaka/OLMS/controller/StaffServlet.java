@@ -3,6 +3,7 @@ package lk.karunathilaka.OLMS.controller;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lk.karunathilaka.OLMS.bean.BookBean;
+import lk.karunathilaka.OLMS.bean.BorrowBean;
 import lk.karunathilaka.OLMS.service.BookService;
 
 import javax.servlet.ServletException;
@@ -25,6 +26,17 @@ public class StaffServlet extends HttpServlet {
             BookBean bookBean = new BookBean(req.getParameter("bookID"), req.getParameter("isbn"), req.getParameter("title"), req.getParameter("author"), req.getParameter("category"), req.getParameter("addedBy"), new Date(new java.util.Date().getTime()).toString(), req.getParameter("availability"));
             BookService bookService = new BookService();
             String result = bookService.setBook(bookBean);
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("Response", result);
+            printWriter.print(jsonObject.toString());
+
+        }else if(accessType.equals("borrowBook")){
+            BorrowBean borrowBean = new BorrowBean(req.getParameter("bookID"), req.getParameter("memberID"), req.getParameter("issuedBy"));
+            BookService bookService = new BookService();
+            String result = bookService.borrowBook(borrowBean);
 
             resp.setContentType("application/json");
             PrintWriter printWriter = resp.getWriter();

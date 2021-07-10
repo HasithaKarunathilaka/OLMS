@@ -122,7 +122,7 @@ public class BookRepository {
     }
 
     public static JsonArray searchBook(BookBean bookBean){
-        System.out.println("repo start");
+//        System.out.println("repo start");
         JsonArray searchResultBooks = new JsonArray();
         boolean result = false;
         Connection conn = null;
@@ -141,10 +141,11 @@ public class BookRepository {
 
                 }else if(bookBean.getAvailability() == ""){
 //                    System.out.println("2");
-                    ps = conn.prepareStatement("SELECT * FROM book WHERE title LIKE ? AND author LIKE ? AND isbn = ?");
+                    ps = conn.prepareStatement("SELECT * FROM book WHERE title LIKE ? AND author LIKE ? AND (isbn = ? OR bookID = ?)");
                     ps.setString(1, bookBean.getTitle());
                     ps.setString(2, bookBean.getAuthor());
                     ps.setString(3, bookBean.getIsbn());
+                    ps.setString(4, bookBean.getIsbn());
 
                 }else if(bookBean.getIsbn() == ""){
 //                    System.out.println("3");
@@ -154,11 +155,12 @@ public class BookRepository {
                     ps.setString(3, bookBean.getAvailability());
 
                 }else{
-                    ps = conn.prepareStatement("SELECT * FROM book WHERE title LIKE ? AND author LIKE ? AND availability = ? AND isbn = ?");
+                    ps = conn.prepareStatement("SELECT * FROM book WHERE title LIKE ? AND author LIKE ? AND availability = ? AND (isbn = ? OR bookID = ?)");
                     ps.setString(1, bookBean.getTitle());
                     ps.setString(2, bookBean.getAuthor());
                     ps.setString(3, bookBean.getAvailability());
                     ps.setString(4, bookBean.getIsbn());
+                    ps.setString(5, bookBean.getIsbn());
 
                 }
 
@@ -172,11 +174,12 @@ public class BookRepository {
 
                 }else if(bookBean.getAvailability() == ""){
 //                    System.out.println("6");
-                    ps = conn.prepareStatement("SELECT * FROM book WHERE title LIKE ? AND author LIKE ? AND isbn = ? AND category = ?");
+                    ps = conn.prepareStatement("SELECT * FROM book WHERE title LIKE ? AND author LIKE ? AND category = ? AND (isbn = ? OR bookID = ?)");
                     ps.setString(1, bookBean.getTitle());
                     ps.setString(2, bookBean.getAuthor());
-                    ps.setString(3, bookBean.getIsbn());
-                    ps.setString(4, bookBean.getCategory());
+                    ps.setString(3, bookBean.getCategory());
+                    ps.setString(4, bookBean.getIsbn());
+                    ps.setString(5, bookBean.getIsbn());
 
                 }else if(bookBean.getIsbn() == ""){
 //                    System.out.println("7");
@@ -188,12 +191,13 @@ public class BookRepository {
 
                 }else{
 //                    System.out.println("8");
-                    ps = conn.prepareStatement("SELECT * FROM book WHERE title LIKE ? AND author LIKE ? AND availability = ? AND category = ? AND isbn = ?");
+                    ps = conn.prepareStatement("SELECT * FROM book WHERE title LIKE ? AND author LIKE ? AND availability = ? AND category = ? AND (isbn = ? OR bookID = ?)");
                     ps.setString(1, bookBean.getTitle());
                     ps.setString(2, bookBean.getAuthor());
                     ps.setString(3, bookBean.getAvailability());
                     ps.setString(4, bookBean.getCategory());
                     ps.setString(5, bookBean.getIsbn());
+                    ps.setString(6, bookBean.getIsbn());
 
                 }
 
@@ -202,7 +206,6 @@ public class BookRepository {
             rs = ps.executeQuery();
 
             while (rs.next()){
-//                System.out.println(bookBean.getIsbn());
                 JsonObject bookDetails = new JsonObject();
                 bookDetails.addProperty("bookID", rs.getString("bookID"));
                 bookDetails.addProperty("isbn", rs.getString("isbn"));

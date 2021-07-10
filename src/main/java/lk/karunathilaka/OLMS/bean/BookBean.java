@@ -28,6 +28,15 @@ public class BookBean {
         this.availability = availability;
     }
 
+    public BookBean(String isbn, String category, String availability) {
+        this.isbn = isbn;
+        this.category = category;
+        this.availability = availability;
+    }
+
+    public BookBean() {
+    }
+
     public String getBookID() {
         return bookID;
     }

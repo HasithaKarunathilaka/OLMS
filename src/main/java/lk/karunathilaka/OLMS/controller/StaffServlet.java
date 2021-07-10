@@ -63,6 +63,8 @@ public class StaffServlet extends HttpServlet {
             jsonObject.addProperty("Response", result);
             printWriter.print(jsonObject.toString());
 
+//        }else if(accessType.equals("updateBook")){
+
         }
 
     }
@@ -95,6 +97,7 @@ public class StaffServlet extends HttpServlet {
             BookBean bookBean = new BookBean(null, req.getParameter("isbn"), req.getParameter("title"), req.getParameter("author"), req.getParameter("category"), null, null, req.getParameter("availability"));
             BookService bookService = new BookService();
             Object result = bookService.searchBook(bookBean);
+            System.out.println(result.toString());
 
             resp.setContentType("application/json");
             PrintWriter printWriter = resp.getWriter();

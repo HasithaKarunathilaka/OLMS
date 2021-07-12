@@ -2,16 +2,11 @@ package lk.karunathilaka.OLMS.service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonParseException;
 import lk.karunathilaka.OLMS.bean.BookBean;
 import lk.karunathilaka.OLMS.bean.BorrowBean;
 import lk.karunathilaka.OLMS.repository.BookRepository;
 import lk.karunathilaka.OLMS.repository.BorrowRepository;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -94,24 +89,25 @@ public class BookService {
         bookBean.setCategory("all");
         bookBean.setAvailability("");
 
-        JsonArray boookDetial = BookRepository.searchBook(bookBean);
-        JsonParser jsonParser = new JsonParser();
-        String availability = "unavailable";
+        JsonArray bookDetail = BookRepository.searchBook(bookBean);
+//        JsonParser jsonParser = new JsonParser();
+        JsonObject bookDetails = bookDetail.get(0).getAsJsonObject();
+        String availability = String.valueOf(bookDetails.get("availability"));
 
-        try {
-            JsonObject bookDetails = (JsonObject) jsonParser.parse(String.valueOf(boookDetial.get(0)));
-            availability = (bookDetails.get("availability").toString());
-
-        }catch (JsonParseException e){
-            e.printStackTrace();
-        }
+//        try {
+//            JsonObject bookDetails = (JsonObject) jsonParser.parse(String.valueOf(bookDetail.get(0)));
+//            availability = (bookDetails.get("availability").toString());
+//
+//        }catch (JsonParseException e){
+//            e.printStackTrace();
+//        }
 
         if(availability.equals("\"available\"")){
             boolean resultBorrowRepo = BorrowRepository.setBorrowDetails(borrowBean);
 
             if(resultBorrowRepo) {
 //            bookBean.setBookID(borrowBean.getBookIDBorrow());
-                bookBean.setAvailability("Issued");
+                bookBean.setAvailability("issued");
                 bookBean.setIsbn("borrowBook");
                 boolean updateResult = BookRepository.updateBook(bookBean);
 
@@ -131,6 +127,74 @@ public class BookService {
             return "error book is " + availability;
 
         }
+    }
 
+    public JsonArray returnBook(BorrowBean borrowBean){
+        JsonArray finalResult = new JsonArray();
+//        String[] finalResult = new String[2];
+        boolean selectBorrowBook = BorrowRepository.getBorrowDetail(borrowBean, "returning");
+
+        if(selectBorrowBook){
+            String resultDateCheck = null;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar calendar = Calendar.getInstance();
+            borrowBean.setReturnedDate(simpleDateFormat.format(calendar.getTime()));
+
+            CalculationService calculationService = new CalculationService();
+
+            try {
+                resultDateCheck = calculationService.checkDateBefore(borrowBean.getDueDate(), borrowBean.getReturnedDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            if(resultDateCheck.equals("before")){
+                int resultNumberOfDays = 0;
+
+                try {
+                    resultNumberOfDays = calculationService.calculateDateDifference(borrowBean.getDueDate(), borrowBean.getReturnedDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                int fineAmount = calculationService.calculateFine(resultNumberOfDays);
+                borrowBean.setFine(fineAmount);
+
+            }else{
+                borrowBean.setFine(0);
+            }
+
+            boolean returnBorrowBook = BorrowRepository.updateBorrowDetails(borrowBean, "bookReturn");
+
+            if(returnBorrowBook){
+                BookBean bookBean = new BookBean(borrowBean.getBookIDBorrow(), "available");
+                bookBean.setIsbn("returning");
+                boolean resultBookRepoAvailability = BookRepository.updateBook(bookBean);
+
+                if(resultBookRepoAvailability){
+                    finalResult.add("success");
+                    finalResult.add(borrowBean.getFine());
+
+                }else{
+                    finalResult.add("error");
+                    finalResult.add("error while updating book repo availability");
+
+                }
+
+            }else{
+                finalResult.add("error");
+                finalResult.add("error while updating returned book");
+//                finalResult[0] = "error";
+//                finalResult[1] = "error while updating returned book";
+
+            }
+
+        }else {
+            finalResult.add("error");
+            finalResult.add("error while selecting borrowed book");
+//            finalResult[0] = "error";
+//            finalResult[1] = "error while selecting borrowed book";
+
+        }
+        return finalResult;
     }
 }

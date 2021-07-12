@@ -63,7 +63,16 @@ public class StaffServlet extends HttpServlet {
             jsonObject.addProperty("Response", result);
             printWriter.print(jsonObject.toString());
 
-//        }else if(accessType.equals("updateBook")){
+        }else if(accessType.equals("returnBook")){
+            BorrowBean borrowBean = new BorrowBean(req.getParameter("bookID"), req.getParameter("acceptedBy"));
+            BookService bookService = new BookService();
+            JsonArray result = bookService.returnBook(borrowBean);
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(jsonObject.toString());
 
         }
 

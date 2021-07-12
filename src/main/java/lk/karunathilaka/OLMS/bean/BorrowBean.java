@@ -27,6 +27,11 @@ public class BorrowBean {
         this.issuedBy = issuedBy;
     }
 
+    public BorrowBean(String bookIDBorrow, String acceptedBy) {
+        this.bookIDBorrow = bookIDBorrow;
+        this.acceptedBy = acceptedBy;
+    }
+
     public String getBookIDBorrow() {
         return bookIDBorrow;
     }

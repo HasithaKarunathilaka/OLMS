@@ -60,6 +60,12 @@ public class BookRepository {
                 ps.setString(1, bookBean.getAvailability());
                 ps.setString(2, bookBean.getBookID());
 
+            }else if(bookBean.getIsbn().equals("returning")){
+                ps = conn.prepareStatement("UPDATE book SET availability = ? WHERE bookID = ?");
+
+                ps.setString(1, bookBean.getAvailability());
+                ps.setString(2, bookBean.getBookID());
+
             }else{
                 ps = conn.prepareStatement("UPDATE book SET isbn = ?, title = ?, author = ?, category = ?, addedBy = ?, addedDate = ?, availability = ? WHERE bookID = ?");
 

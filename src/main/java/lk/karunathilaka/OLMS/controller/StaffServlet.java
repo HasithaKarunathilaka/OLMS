@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.io.File;
 
 @WebServlet(name = "StaffServlet")
 public class StaffServlet extends HttpServlet {
@@ -43,6 +44,20 @@ public class StaffServlet extends HttpServlet {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("Response", result);
             printWriter.print(jsonObject.toString());
+
+//        }else if(accessType.equals("creatFolder")){
+//            String fileName = req.getParameter("fileName");
+//            String realPath = getServletContext().getRealPath("");
+//            File file = new File(realPath+File.separator+fileName);
+////            file.mkdirs();
+//            System.out.println(realPath);
+//            boolean result = file.mkdirs();
+//
+//            resp.setContentType("application/json");
+//            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", result);
+//            printWriter.print(jsonObject.toString());
 
         }
     }

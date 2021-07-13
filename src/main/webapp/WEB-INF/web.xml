@@ -22,4 +22,14 @@
         <servlet-name>StaffServlet</servlet-name>
         <url-pattern>/staff</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PublisherServlet</servlet-name>
+        <servlet-class>lk.karunathilaka.OLMS.controller.PublisherServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>PublisherServlet</servlet-name>
+        <url-pattern>/publisher</url-pattern>
+    </servlet-mapping>
 </web-app>

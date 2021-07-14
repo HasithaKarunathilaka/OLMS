@@ -49,4 +49,49 @@ public class FileService {
 
         return result;
     }
+
+    public boolean uploadImage(Part filePartImage, EbookBeen ebookBeen){
+        boolean result = false;
+        try{
+            String folderName = "images";
+            String uploadPath = ebookBeen.getImagePath() + File.separator + folderName; // web_server_path/images
+
+            String fileName = filePartImage.getSubmittedFileName();
+            String[] fileNameArray = fileName.split("\\.",0);
+            System.out.println(fileNameArray.toString());
+            System.out.println(fileName);
+            for(String w : fileNameArray){
+                System.out.println(w);
+            }
+
+            File newName = new File(ebookBeen.getBookID() + "." + fileNameArray[1]); // set new file name to the image using bookID
+
+//            ------ Make images folder in web server if not exists ------
+
+            File file = new File(uploadPath);
+            if(!file.exists()){
+                file.mkdir();
+            }
+
+//            String fileName = filePart.getSubmittedFileName();
+            String path = folderName + File.separator + newName; // images/bookID.jpg
+            ebookBeen.setImagePath(path);
+
+            InputStream inputStream = filePartImage.getInputStream();
+
+            if(!Files.exists(Paths.get(uploadPath + File.separator + newName))){
+                Files.copy(inputStream, Paths.get(uploadPath + File.separator + newName), StandardCopyOption.REPLACE_EXISTING);
+                result = true;
+
+            }else{
+                result = false;
+            }
+
+
+        } catch (IOException e){
+            System.out.println("Exception: " + e);
+        }
+
+        return result;
+    }
 }

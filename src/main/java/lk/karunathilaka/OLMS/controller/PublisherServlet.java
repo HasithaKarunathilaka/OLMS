@@ -29,12 +29,19 @@ public class PublisherServlet extends HttpServlet {
         if(accessType.equals("uploadEBook")){
             EbookBeen ebookBeen = new EbookBeen();
             ebookBeen.setBookID(req.getParameter("bookID"));
+            ebookBeen.setIsbn(req.getParameter("isbn"));
+            ebookBeen.setTitle(req.getParameter("title"));
+            ebookBeen.setAuthor(req.getParameter("author"));
+            ebookBeen.setCategory(req.getParameter("category"));
+            ebookBeen.setPages(req.getParameter("pages"));
+            ebookBeen.setAvailability("pending");
             ebookBeen.setPdfPath(req.getServletContext().getRealPath(""));
+            ebookBeen.setImagePath(req.getServletContext().getRealPath(""));
             Part filePart = req.getPart("pdf");
-            System.out.println(ebookBeen.getPdfPath());
+            Part filePartimage = req.getPart("image");
 
             EbookService ebookService = new EbookService();
-            String result = ebookService.setEbook(filePart, ebookBeen);
+            String result = ebookService.setEbook(filePart, filePartimage, ebookBeen);
 
             resp.setContentType("application/json");
             PrintWriter printWriter = resp.getWriter();

@@ -21,13 +21,32 @@ import java.io.PrintWriter;
 @WebServlet(name = "UserServlet")
 public class UserServlet extends HttpServlet {
     @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        super.doOptions(req, resp);
+        setAccessControlHeaders(resp);
+        resp.setStatus(HttpServletResponse.SC_OK);
+
+    }
+
+    private void setAccessControlHeaders(HttpServletResponse resp){
+        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:63342");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "36000");
+        resp.setHeader("Access-Control-Allow-Headers", "content-type, x-requested-with");
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        super.doPost(req, resp);
+        setAccessControlHeaders(resp);
         String accessType = req.getParameter("type");
-
+        System.out.println(accessType+"----------------------------------");
         if(accessType.equals("registerMember")){
             String email = req.getParameter("email");
             String password = req.getParameter("password");
+            System.out.println(email);
+            System.out.println(password);
 
             MemberBean memberBean = new MemberBean("",req.getParameter("fName"),req.getParameter("lName"),req.getParameter("gender"),req.getParameter("dob"),req.getParameter("telephone"),email,req.getParameter("addLine1"),req.getParameter("addLine2"),req.getParameter("addLine3"),null,null,"pending");
             UserBean userBean = new UserBean(email,password,"member");
@@ -64,13 +83,14 @@ public class UserServlet extends HttpServlet {
 
             UserBean userBean = new UserBean(username,password,null);
             UserService userService = new UserService();
-            Object result = userService.userLogin(userBean);
+            JsonArray result = userService.userLogin(userBean);
+            System.out.println(result.toString());
 
             resp.setContentType("application/json");
             PrintWriter printWriter = resp.getWriter();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("Response", result.toString());
-            printWriter.print(jsonObject.toString());
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", result.toString());
+            printWriter.println(result.toString());
 
         }
 

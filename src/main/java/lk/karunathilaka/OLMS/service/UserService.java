@@ -9,6 +9,8 @@ import lk.karunathilaka.OLMS.repository.MemberRepository;
 import lk.karunathilaka.OLMS.repository.PublisherRepository;
 import lk.karunathilaka.OLMS.repository.UserRepository;
 
+import javax.xml.bind.SchemaOutputResolver;
+
 public class UserService {
     public String registerMember(MemberBean memberBean, UserBean userBean){
         String resultRegisterMember;
@@ -30,7 +32,7 @@ public class UserService {
             }
 
         }else{
-            resultRegisterMember = "setUser error";
+            resultRegisterMember = "Your Email already Registered!";
         }
         return resultRegisterMember;
     }
@@ -60,7 +62,7 @@ public class UserService {
         return resultRegisterPublisher;
     }
 
-    public Object userLogin(UserBean userBean){
+    public JsonArray userLogin(UserBean userBean){
         JsonArray userLoginResult = new JsonArray();
         boolean userRepositoryResult = UserRepository.getUserLogin(userBean);
 
@@ -70,39 +72,42 @@ public class UserService {
                 MemberBean memberBean = MemberRepository.getMemberLogin(userBean);
 
                 if(memberBean.equals(null)){
-                    return "error memberRepository";
+                    userLoginResult.add("error memberRepository");
 
                 }else{
+                    System.out.println(memberBean.getMemberID());
                     JsonObject memberLogin = new JsonObject();
                     memberLogin.addProperty("id", memberBean.getMemberID());
                     memberLogin.addProperty("name", memberBean.getfName());
                     memberLogin.addProperty("state", memberBean.getState());
+                    memberLogin.addProperty("type", userBean.getType());
                     userLoginResult.add(memberLogin);
-                    return userLoginResult;
+                    System.out.println(userLoginResult);
                 }
+                return userLoginResult;
 
             }else if(userBean.getType().equals("publisher")){
                 PublisherBean publisherBean = PublisherRepository.getPublisherLogin(userBean);
 
                 if(publisherBean.equals(null)){
-                    return "error publisherRepository";
+                    userLoginResult.add("error publisherRepository");
 
                 }else{
                     JsonObject publisherLogin = new JsonObject();
                     publisherLogin.addProperty("id", publisherBean.getPublisherID());
                     publisherLogin.addProperty("name", publisherBean.getName());
                     publisherLogin.addProperty("state", publisherBean.getState());
+                    publisherLogin.addProperty("type", userBean.getType());
                     userLoginResult.add(publisherLogin);
-                    return userLoginResult;
 
                 }
 
             }
 
         }else{
-            return "invalid username password";
+            userLoginResult.add("invalid username password");
 
         }
-        return null;
+        return userLoginResult;
     }
 }

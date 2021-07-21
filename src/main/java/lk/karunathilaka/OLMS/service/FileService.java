@@ -57,12 +57,8 @@ public class FileService {
             String uploadPath = ebookBeen.getImagePath() + File.separator + folderName; // web_server_path/images
 
             String fileName = filePartImage.getSubmittedFileName();
-            String[] fileNameArray = fileName.split("\\.",0);
-            System.out.println(fileNameArray.toString());
-            System.out.println(fileName);
-            for(String w : fileNameArray){
-                System.out.println(w);
-            }
+            String[] fileNameArray = fileName.split("\\.",0); // image.jpg, img.png, img.gif // test.exe
+
 
             File newName = new File(ebookBeen.getBookID() + "." + fileNameArray[1]); // set new file name to the image using bookID
 

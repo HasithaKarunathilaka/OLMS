@@ -17,8 +17,8 @@ public class DBConnectionPool {
         basicDataSource.setUsername("root");                                //db username
         basicDataSource.setPassword("root");                            //db password
         basicDataSource.setMinIdle(2);
-        basicDataSource.setMaxIdle(5);
-        basicDataSource.setMaxTotal(10);
+        basicDataSource.setMaxIdle(10);
+        basicDataSource.setMaxTotal(20);
     }
 
     public static DBConnectionPool getInstance()

@@ -38,16 +38,17 @@ public class PublisherServlet extends HttpServlet {
             ebookBeen.setPdfPath(req.getServletContext().getRealPath(""));
             ebookBeen.setImagePath(req.getServletContext().getRealPath(""));
             Part filePart = req.getPart("pdf");
-            Part filePartimage = req.getPart("image");
+            Part filePartImage = req.getPart("image");
+            ebookBeen.setPublisherID(req.getParameter("publisherID"));
 
             EbookService ebookService = new EbookService();
-            String result = ebookService.setEbook(filePart, filePartimage, ebookBeen);
+            String result = ebookService.setEbook(filePart, filePartImage, ebookBeen);
 
-            resp.setContentType("application/json");
+//            resp.setContentType("application/json");
             PrintWriter printWriter = resp.getWriter();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("Response", result);
-            printWriter.print(jsonObject.toString());
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", result);
+            printWriter.print(result);
 
         }
     }

@@ -10,8 +10,35 @@ public class EbookBeen {
     private String availability;
     private String pdfPath;
     private String imagePath;
+    private String publisherID;
+    private String publishedDate;
+    private double avgRate;
 
     public EbookBeen() {
+    }
+
+    public double getAvgRate() {
+        return avgRate;
+    }
+
+    public void setAvgRate(double avgRate) {
+        this.avgRate = avgRate;
+    }
+
+    public String getPublisherID() {
+        return publisherID;
+    }
+
+    public void setPublisherID(String publisherID) {
+        this.publisherID = publisherID;
+    }
+
+    public String getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
     }
 
     public String getBookID() {

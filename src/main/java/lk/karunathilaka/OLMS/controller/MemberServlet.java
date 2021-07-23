@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet(name = "MemberServlet")
 public class MemberServlet extends HttpServlet {
@@ -33,14 +34,27 @@ public class MemberServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        super.doGet(req, resp);
         String type = req.getParameter("type");
+
         if(type.equals("ebookSearch")){
+            System.out.println("start");
             EbookBeen ebookBeen =new EbookBeen();
             ebookBeen.setBookID(req.getParameter("bookID"));
             ebookBeen.setTitle(req.getParameter("title"));
             ebookBeen.setAuthor(req.getParameter("author"));
             ebookBeen.setCategory(req.getParameter("category"));
+            ebookBeen.setAvailability("available");
+//            ebookBeen.setPdfPath(req.getServletContext().getRealPath(""));
+
             EbookService ebookService = new EbookService();
             JsonArray result = ebookService.searchEbook(ebookBeen);
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
+
+        }else if(type.equals("readBook")){
 
         }
     }

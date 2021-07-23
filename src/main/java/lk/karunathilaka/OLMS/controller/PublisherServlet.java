@@ -1,9 +1,7 @@
 package lk.karunathilaka.OLMS.controller;
 
-import com.google.gson.JsonObject;
 import lk.karunathilaka.OLMS.bean.EbookBeen;
 import lk.karunathilaka.OLMS.service.EbookService;
-import lk.karunathilaka.OLMS.service.FileService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -27,6 +25,9 @@ public class PublisherServlet extends HttpServlet {
         String accessType = req.getParameter("type");
 
         if(accessType.equals("uploadEBook")){
+//            long startTime = System.nanoTime();
+//            System.out.println(startTime);
+
             EbookBeen ebookBeen = new EbookBeen();
             ebookBeen.setBookID(req.getParameter("bookID"));
             ebookBeen.setIsbn(req.getParameter("isbn"));
@@ -43,6 +44,8 @@ public class PublisherServlet extends HttpServlet {
 
             EbookService ebookService = new EbookService();
             String result = ebookService.setEbook(filePart, filePartImage, ebookBeen);
+//            long estimatedTime = System.nanoTime() - startTime;
+//            System.out.println(estimatedTime);
 
 //            resp.setContentType("application/json");
             PrintWriter printWriter = resp.getWriter();

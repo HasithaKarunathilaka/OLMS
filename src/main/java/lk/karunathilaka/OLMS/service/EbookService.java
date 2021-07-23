@@ -3,8 +3,10 @@ package lk.karunathilaka.OLMS.service;
 import com.google.gson.JsonArray;
 import lk.karunathilaka.OLMS.bean.ApprovalBean;
 import lk.karunathilaka.OLMS.bean.EbookBeen;
+import lk.karunathilaka.OLMS.bean.BookStatisticBean;
 import lk.karunathilaka.OLMS.repository.ApprovalRepository;
 import lk.karunathilaka.OLMS.repository.EbookRepository;
+import lk.karunathilaka.OLMS.repository.BookStatisticRepository;
 
 import javax.servlet.http.Part;
 import java.text.SimpleDateFormat;
@@ -54,12 +56,22 @@ public class EbookService {
         if(resultApprove){
             EbookBeen ebookBeen = new EbookBeen();
             ebookBeen.setBookID(approvalBean.getItemID());
+            ebookBeen.setAvailability("available");
             boolean resultUpdateEbook = EbookRepository.updateEbook(ebookBeen, "approval");
 
             if(resultUpdateEbook){
-                result = "success";
-            }else {
+                BookStatisticBean readBean = new BookStatisticBean(approvalBean.getItemID(), 0, 0, 0, 0, 0);
+                boolean resultSetRead = BookStatisticRepository.setRead(readBean);
+
+                if(resultSetRead){
+                    result = "success";
+                }else {
+                    result ="Error! \nError while Inserting Read table";
+                }
+
+            }else{
                 result ="Error! \nError while updating Ebook Availability";
+
             }
 
         }else{
@@ -78,9 +90,12 @@ public class EbookService {
         author = "%" + author + "%";
         ebookBeen.setTitle(title);
         ebookBeen.setAuthor(author);
-        ebookBeen.setAvailability("available");
+        ebookBeen.setPublisherID("");
 
         JsonArray result = EbookRepository.searchEbook(ebookBeen);
+        System.out.println(result);
+
+        return result;
 
     }
 

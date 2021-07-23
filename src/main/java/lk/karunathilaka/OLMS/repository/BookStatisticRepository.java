@@ -1,15 +1,14 @@
 package lk.karunathilaka.OLMS.repository;
 
-import lk.karunathilaka.OLMS.bean.BookBean;
-import lk.karunathilaka.OLMS.bean.ReadBean;
+import lk.karunathilaka.OLMS.bean.BookStatisticBean;
 import lk.karunathilaka.OLMS.db.DBConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class ReadRepository {
-    public static boolean setRead(ReadBean readBean){
+public class BookStatisticRepository {
+    public static boolean setRead(BookStatisticBean readBean){
         boolean result = false;
         Connection conn = null;
         PreparedStatement ps = null;
@@ -17,7 +16,7 @@ public class ReadRepository {
 
         try{
             conn = DBConnectionPool.getInstance().getConnection();
-            ps = conn.prepareStatement("INSERT INTO read (bookIDRead, totReadpages, avgTimeForPage, totNumberOfViews, maxPage, maxTime) VALUES (?, ?, ?, ?, ?, ?)");
+            ps = conn.prepareStatement("INSERT INTO bookStatistic (bookIDRead, totReadpages, avgTimeForPage, totNumberOfViews, maxPage, maxTime) VALUES (?, ?, ?, ?, ?, ?)");
             ps.setString(1, readBean.getBookIDRead());
             ps.setInt(2, readBean.getTotReadPages());
             ps.setInt(3, readBean.getAvgTimeForPage());

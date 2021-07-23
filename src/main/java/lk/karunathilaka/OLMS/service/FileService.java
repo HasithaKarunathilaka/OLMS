@@ -1,46 +1,97 @@
 package lk.karunathilaka.OLMS.service;
 
 import lk.karunathilaka.OLMS.bean.EbookBeen;
+import org.apache.pdfbox.multipdf.Splitter;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.Part;
-import javax.sql.rowset.serial.SerialException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Iterator;
+import java.util.List;
+
+//import org.apache.pdfbox.exceptions.COSVisitorException;
+//import org.apache.pdfbox.exceptions.CryptographyException;
+//import org.apache.pdfbox.exceptions.InvalidPasswordException;
 
 public class FileService {
     public boolean uploadEbook(Part filePart, EbookBeen ebookBeen){
         boolean result = false;
         try{
             String folderName = "ebooks";
-            String uploadPath = ebookBeen.getPdfPath() + File.separator + folderName; // web_server_path/ebooks
+            String uploadPath = ebookBeen.getPdfPath() + File.separator + folderName + File.separator + ebookBeen.getBookID(); // web_server_path/ebooks
 
-            File newName = new File(ebookBeen.getBookID() + ".pdf"); // set new file name to the pdf using bookID
-
-//            ------ Make ebooks folder in web server if not exists ------
+//            File newName = new File(ebookBeen.getBookID() + ".pdf"); // set new file name to the pdf using bookID
 
             File file = new File(uploadPath);
             if(!file.exists()){
                 file.mkdir();
             }
 
-//            String fileName = filePart.getSubmittedFileName();
-            String path = folderName + File.separator + newName; // ebooks/bookID.pdf
-            ebookBeen.setPdfPath(path);
-
+            // Open document
             InputStream inputStream = filePart.getInputStream();
+//            Document pdfDocument = new Document(inputStream);
+            PDDocument pdDocument = new PDDocument().load(inputStream);
+            System.out.println("Page Count is: " + pdDocument.getPages().getCount());
 
-            if(!Files.exists(Paths.get(uploadPath + File.separator + newName))){
-                Files.copy(inputStream, Paths.get(uploadPath + File.separator + newName), StandardCopyOption.REPLACE_EXISTING);
+            Splitter splitter = new Splitter();
+
+            List<PDDocument> Page = splitter.split(pdDocument);
+
+            Iterator<PDDocument> iteration = Page.listIterator();
+
+// For page counter
+            int pageCount = 1;
+
+// Loop through all the pages
+            while(iteration.hasNext()){
+                PDDocument pd = iteration.next();
+                pd.save(uploadPath + File.separator + pageCount + ".pdf");
+                pageCount++;
+                System.out.println("while");
                 result = true;
 
-            }else{
-                result = false;
             }
+            pdDocument.close();
+//            for (PDPage pdfPage : pdDocument.getPages()) {
+//                // Create a new document
+//                Document newDocument = new Document();
+//
+//                // Add page to the document
+//                newDocument.getPages().add((Iterable<Page>) pdfPage);
+//
+//                // Save as PDF
+//                newDocument.save(uploadPath + File.separator + pageCount + ".pdf");
+////                InputStream inputStream = filePart.getInputStream();
+////                Files.copy(inputStream, Paths.get(uploadPath + File.separator + newName), StandardCopyOption.REPLACE_EXISTING);
+//                pageCount++;
+//                result =true;
+//            }
+
+//            ------ Make ebooks folder in web server if not exists ------
+
+//            File file = new File(uploadPath);
+//            if(!file.exists()){
+//                file.mkdir();
+//            }
+
+//            String fileName = filePart.getSubmittedFileName();
+//            String path = folderName + File.separator + newName; // ebooks/bookID.pdf
+            ebookBeen.setPdfPath(folderName + File.separator + ebookBeen.getBookID());
+
+//            InputStream inputStream = filePart.getInputStream();
+
+//            if(!Files.exists(Paths.get(uploadPath + File.separator + newName))){
+//                Files.copy(inputStream, Paths.get(uploadPath + File.separator + newName), StandardCopyOption.REPLACE_EXISTING);
+//                result = true;
+
+//            }else{
+//                result = false;
+//            }
 
 
         } catch (IOException e){

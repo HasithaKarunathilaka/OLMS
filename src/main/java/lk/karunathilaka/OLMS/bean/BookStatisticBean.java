@@ -1,6 +1,6 @@
 package lk.karunathilaka.OLMS.bean;
 
-public class ReadBean {
+public class BookStatisticBean {
     private String bookIDRead;
     private int totReadPages;
     private int avgTimeForPage;
@@ -8,7 +8,16 @@ public class ReadBean {
     private int maxPage;
     private int maxTime;
 
-    public ReadBean() {
+    public BookStatisticBean() {
+    }
+
+    public BookStatisticBean(String bookIDRead, int totReadPages, int avgTimeForPage, int totNumberOfViews, int maxPage, int maxTime) {
+        this.bookIDRead = bookIDRead;
+        this.totReadPages = totReadPages;
+        this.avgTimeForPage = avgTimeForPage;
+        this.totNumberOfViews = totNumberOfViews;
+        this.maxPage = maxPage;
+        this.maxTime = maxTime;
     }
 
     public String getBookIDRead() {

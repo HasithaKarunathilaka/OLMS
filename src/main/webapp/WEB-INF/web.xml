@@ -32,4 +32,14 @@
         <servlet-name>PublisherServlet</servlet-name>
         <url-pattern>/publisher</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MemberServlet</servlet-name>
+        <servlet-class>lk.karunathilaka.OLMS.controller.MemberServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>MemberServlet</servlet-name>
+        <url-pattern>/member</url-pattern>
+    </servlet-mapping>
 </web-app>

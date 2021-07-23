@@ -2,11 +2,9 @@ package lk.karunathilaka.OLMS.repository;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import lk.karunathilaka.OLMS.bean.BookBean;
 import lk.karunathilaka.OLMS.bean.EbookBeen;
 import lk.karunathilaka.OLMS.db.DBConnectionPool;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -213,5 +211,35 @@ public class EbookRepository {
             DBConnectionPool.getInstance().close(conn);
         }
         return searchResultBooks;
+    }
+
+    public static boolean getPdfPath(EbookBeen ebookBeen){
+        boolean result = false;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+
+            ps = conn.prepareStatement("SELECT * FROM ebook WHERE bookID = ?");
+            ps.setString(1, ebookBeen.getBookID());
+
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                ebookBeen.setPdfPath(rs.getString("pdfPath"));
+                result = true;
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+//            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return result;
     }
 }

@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import lk.karunathilaka.OLMS.bean.ApprovalBean;
 import lk.karunathilaka.OLMS.bean.EbookBeen;
 import lk.karunathilaka.OLMS.bean.BookStatisticBean;
+import lk.karunathilaka.OLMS.bean.RateBean;
 import lk.karunathilaka.OLMS.repository.ApprovalRepository;
 import lk.karunathilaka.OLMS.repository.EbookRepository;
 import lk.karunathilaka.OLMS.repository.BookStatisticRepository;
@@ -97,6 +98,28 @@ public class EbookService {
 
         return result;
 
+    }
+
+    public JsonArray getPdf(RateBean rateBean){
+        JsonArray resultBooks = new JsonArray();
+
+        EbookBeen ebookBeen = new EbookBeen();
+        ebookBeen.setBookID(rateBean.getBookIDRate());
+
+        boolean resultSelectPdfPath = EbookRepository.getPdfPath(ebookBeen);
+
+        if(resultSelectPdfPath){
+            BookStatisticBean bookStatisticBean = new BookStatisticBean();
+            bookStatisticBean.setBookIDRead(rateBean.getBookIDRate());
+            boolean resultBookStatistic = BookStatisticRepository.getBookStatistic(bookStatisticBean);
+
+        }else {
+
+        }
+
+
+
+        return resultBooks;
     }
 
 }

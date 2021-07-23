@@ -5,6 +5,7 @@ import lk.karunathilaka.OLMS.db.DBConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class BookStatisticRepository {
@@ -34,6 +35,38 @@ public class BookStatisticRepository {
 
         }finally{
 //            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return result;
+    }
+
+    public static boolean getBookStatistic(BookStatisticBean bookStatisticBean){
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean result = false;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT * FROM bookStatistic WHERE bookIDRead = ?");
+            ps.setString(1, bookStatisticBean.getBookIDRead());
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                bookStatisticBean.setAvgTimeForPage(rs.getInt("avgTimeForPage"));
+                bookStatisticBean.setTotNumberOfViews(rs.getInt("totNumberOfViews"));
+                bookStatisticBean.setTotReadPages(rs.getInt("totReadPages"));
+                bookStatisticBean.setMaxPage(rs.getInt("maxPage"));
+                bookStatisticBean.setMaxTime(rs.getInt("maxTime"));
+                result = true;
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
             DBConnectionPool.getInstance().close(ps);
             DBConnectionPool.getInstance().close(conn);
         }

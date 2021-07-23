@@ -35,7 +35,7 @@ public class FileService {
             // Open document
             InputStream inputStream = filePart.getInputStream();
 //            Document pdfDocument = new Document(inputStream);
-            PDDocument pdDocument = new PDDocument().load(inputStream);
+            PDDocument pdDocument = PDDocument.load(inputStream);
             System.out.println("Page Count is: " + pdDocument.getPages().getCount());
 
             Splitter splitter = new Splitter();
@@ -52,8 +52,9 @@ public class FileService {
                 PDDocument pd = iteration.next();
                 pd.save(uploadPath + File.separator + pageCount + ".pdf");
                 pageCount++;
-                System.out.println("while");
+//                System.out.println("while");
                 result = true;
+                pd.close();
 
             }
             pdDocument.close();

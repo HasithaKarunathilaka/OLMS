@@ -2,6 +2,7 @@ package lk.karunathilaka.OLMS.controller;
 
 import com.google.gson.JsonArray;
 import lk.karunathilaka.OLMS.bean.EbookBeen;
+import lk.karunathilaka.OLMS.bean.RateBean;
 import lk.karunathilaka.OLMS.service.EbookService;
 
 import javax.servlet.ServletException;
@@ -55,6 +56,10 @@ public class MemberServlet extends HttpServlet {
             printWriter.print(result.toString());
 
         }else if(type.equals("readBook")){
+            RateBean rateBean = new RateBean();
+            rateBean.setMemberIDRate(req.getParameter("memberID"));
+            rateBean.setBookIDRate(req.getParameter("bookID"));
+
 
         }
     }

@@ -35,9 +35,10 @@ public class MemberServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        super.doGet(req, resp);
         String type = req.getParameter("type");
+        System.out.println(req.getServletContext().getRealPath(""));
 
         if(type.equals("ebookSearch")){
-            System.out.println("start");
+//            System.out.println("start");
             EbookBeen ebookBeen =new EbookBeen();
             ebookBeen.setBookID(req.getParameter("bookID"));
             ebookBeen.setTitle(req.getParameter("title"));
@@ -56,10 +57,41 @@ public class MemberServlet extends HttpServlet {
             printWriter.print(result.toString());
 
         }else if(type.equals("readBook")){
+//            System.out.println("start");
             RateBean rateBean = new RateBean();
-            rateBean.setMemberIDRate(req.getParameter("memberID"));
+//            String pageNo = req.getParameter("pageNo");
+//            rateBean.setMemberIDRate(req.getParameter("memberID"));
             rateBean.setBookIDRate(req.getParameter("bookID"));
 
+            EbookService ebookService = new EbookService();
+            JsonArray result = ebookService.getPdf(rateBean);
+            System.out.println(result);
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
+
+        }else if(type.equals("readPage")){
+//            System.out.println("start");
+            RateBean rateBean = new RateBean();
+            rateBean.setBookIDRate(req.getParameter("bookID"));
+            rateBean.setMemberIDRate(req.getParameter("memberID"));
+            rateBean.setPage(Integer.parseInt(req.getParameter("pageNo")));
+            rateBean.setRate(Integer.parseInt(req.getParameter("rate")));
+            long pageTime = Long.parseLong(req.getParameter("pageTime"));
+            rateBean.setTime(Long.parseLong(req.getParameter("totalTime")));
+
+            EbookService ebookService = new EbookService();
+            String result = ebookService.setPageStatistics(rateBean, pageTime);
+            System.out.println(result);
+
+//            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result);
 
         }
     }

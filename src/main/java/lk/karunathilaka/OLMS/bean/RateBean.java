@@ -1,12 +1,10 @@
 package lk.karunathilaka.OLMS.bean;
 
-import java.sql.Time;
-
 public class RateBean {
     private String bookIDRate;
     private String memberIDRate;
     private int rate;
-    private Time time;
+    private long time;
     private int page;
 
     public RateBean() {
@@ -36,11 +34,11 @@ public class RateBean {
         this.rate = rate;
     }
 
-    public Time getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

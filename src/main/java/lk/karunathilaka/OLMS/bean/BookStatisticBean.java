@@ -3,10 +3,10 @@ package lk.karunathilaka.OLMS.bean;
 public class BookStatisticBean {
     private String bookIDRead;
     private int totReadPages;
-    private int avgTimeForPage;
+    private long avgTimeForPage;
     private int totNumberOfViews;
     private int maxPage;
-    private int maxTime;
+    private long maxTime;
 
     public BookStatisticBean() {
     }
@@ -36,11 +36,11 @@ public class BookStatisticBean {
         this.totReadPages = totReadPages;
     }
 
-    public int getAvgTimeForPage() {
+    public long getAvgTimeForPage() {
         return avgTimeForPage;
     }
 
-    public void setAvgTimeForPage(int avgTimeForPage) {
+    public void setAvgTimeForPage(long avgTimeForPage) {
         this.avgTimeForPage = avgTimeForPage;
     }
 
@@ -60,11 +60,11 @@ public class BookStatisticBean {
         this.maxPage = maxPage;
     }
 
-    public int getMaxTime() {
+    public long getMaxTime() {
         return maxTime;
     }
 
-    public void setMaxTime(int maxTime) {
+    public void setMaxTime(long maxTime) {
         this.maxTime = maxTime;
     }
 }

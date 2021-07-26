@@ -229,6 +229,7 @@ public class EbookRepository {
 
             while (rs.next()){
                 ebookBeen.setPdfPath(rs.getString("pdfPath"));
+                ebookBeen.setPages(rs.getString("pages"));
                 result = true;
             }
 

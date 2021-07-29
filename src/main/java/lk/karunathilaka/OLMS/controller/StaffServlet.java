@@ -6,6 +6,7 @@ import lk.karunathilaka.OLMS.bean.ApprovalBean;
 import lk.karunathilaka.OLMS.bean.BookBean;
 import lk.karunathilaka.OLMS.bean.BorrowBean;
 import lk.karunathilaka.OLMS.service.BookService;
+import lk.karunathilaka.OLMS.service.DashboardService;
 import lk.karunathilaka.OLMS.service.EbookService;
 import lk.karunathilaka.OLMS.service.StatisticService;
 
@@ -222,10 +223,21 @@ public class StaffServlet extends HttpServlet {
 //            jsonObject.addProperty("Response", String.valueOf(result));
             printWriter.print(result.toString());
 
-        }else if(accessType.equals("memberStateStat")){
+        }else if(accessType.equals("getMemberStat")){
             System.out.println("Member State Stat");
             StatisticService statisticService = new StatisticService();
-            JsonArray result = statisticService.memberStateCount();
+            JsonArray result = statisticService.memberStat(req.getParameter("memberID"));
+            System.out.println(result.toString());
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
+
+        }else if(accessType.equals("dashboardOnLoad")){
+            DashboardService dashboardService = new DashboardService();
+            JsonArray result = dashboardService.dashboardOnLoad();
             System.out.println(result.toString());
 
             resp.setContentType("application/json");

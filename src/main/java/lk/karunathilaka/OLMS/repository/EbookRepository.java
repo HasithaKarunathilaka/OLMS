@@ -313,4 +313,35 @@ public class EbookRepository {
         }
         return top10;
     }
+
+    public static int availabilityCount(String availability){
+        int availabilityCount = 0;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(bookID) AS availabilityCount FROM ebook WHERE availability = ?");
+
+            ps.setString(1, availability);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                availabilityCount = rs.getInt("availabilityCount");
+                System.out.println("while loop");
+            }
+            System.out.println("end member repo");
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return availabilityCount;
+
+    }
 }

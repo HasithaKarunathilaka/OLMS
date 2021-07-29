@@ -1,8 +1,10 @@
 package lk.karunathilaka.OLMS.service;
 
 import com.google.gson.JsonArray;
+import lk.karunathilaka.OLMS.bean.RateBean;
 import lk.karunathilaka.OLMS.repository.EbookRepository;
 import lk.karunathilaka.OLMS.repository.MemberRepository;
+import lk.karunathilaka.OLMS.repository.RateRepository;
 
 public class StatisticService {
     public JsonArray genderStat(){
@@ -71,5 +73,26 @@ public class StatisticService {
         }
         return result;
 
+    }
+
+    public JsonArray memberStat(String memberID){
+        JsonArray result = new JsonArray();
+        RateBean rateBean = new RateBean();
+        rateBean.setMemberIDRate(memberID);
+
+        boolean resultGetMemberStat = RateRepository.getMemberStat(rateBean);
+        int resultTotalReadBook = RateRepository.totalReadBookCount(rateBean.getMemberIDRate());
+
+        if(resultGetMemberStat && resultTotalReadBook >= 0){
+            int minutes = (int) (rateBean.getTime()/60);
+            result.add(minutes);
+            result.add(rateBean.getPage());
+            result.add(resultTotalReadBook);
+
+        }else{
+            result.add("Error");
+
+        }
+        return result;
     }
 }

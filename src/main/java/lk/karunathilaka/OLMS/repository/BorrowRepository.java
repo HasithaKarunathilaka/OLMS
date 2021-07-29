@@ -1,8 +1,6 @@
 package lk.karunathilaka.OLMS.repository;
 
-import lk.karunathilaka.OLMS.bean.BookBean;
 import lk.karunathilaka.OLMS.bean.BorrowBean;
-import lk.karunathilaka.OLMS.bean.UserBean;
 import lk.karunathilaka.OLMS.db.DBConnectionPool;
 
 import java.sql.Connection;
@@ -114,5 +112,67 @@ public class BorrowRepository {
             DBConnectionPool.getInstance().close(conn);
         }
         return result;
+    }
+
+    public static int dueTodayCount(String date){
+        int dueTodayCount = 0;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(bookIDBorrow) AS dueToday FROM borrow WHERE dueDate = ? AND returnedDate IS NULL ");
+
+            ps.setString(1, date);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                dueTodayCount = rs.getInt("dueToday");
+                System.out.println("while loop");
+            }
+            System.out.println("end member repo");
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return dueTodayCount;
+
+    }
+
+    public static int dueBookCount(String date){
+        int dueBookCount = 0;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(bookIDBorrow) AS dueBook FROM borrow WHERE dueDate <> ? AND returnedDate IS NULL ");
+
+            ps.setString(1, date);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                dueBookCount = rs.getInt("dueBook");
+                System.out.println("while loop");
+            }
+            System.out.println("end member repo");
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return dueBookCount;
+
     }
 }

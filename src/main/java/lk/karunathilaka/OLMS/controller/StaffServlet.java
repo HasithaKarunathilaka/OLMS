@@ -5,9 +5,9 @@ import com.google.gson.JsonObject;
 import lk.karunathilaka.OLMS.bean.ApprovalBean;
 import lk.karunathilaka.OLMS.bean.BookBean;
 import lk.karunathilaka.OLMS.bean.BorrowBean;
-import lk.karunathilaka.OLMS.bean.EbookBeen;
 import lk.karunathilaka.OLMS.service.BookService;
 import lk.karunathilaka.OLMS.service.EbookService;
+import lk.karunathilaka.OLMS.service.StatisticService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
-import java.io.File;
 
 @WebServlet(name = "StaffServlet")
 public class StaffServlet extends HttpServlet {
@@ -167,6 +166,66 @@ public class StaffServlet extends HttpServlet {
             BookBean bookBean = new BookBean(null, req.getParameter("isbn"), req.getParameter("title"), req.getParameter("author"), req.getParameter("category"), null, null, req.getParameter("availability"));
             BookService bookService = new BookService();
             JsonArray result = bookService.searchBook(bookBean);
+            System.out.println(result.toString());
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
+
+        }else if(accessType.equals("genderStat")){
+            System.out.println("Gender Stat");
+            StatisticService statisticService = new StatisticService();
+            JsonArray result = statisticService.genderStat();
+            System.out.println(result.toString());
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
+
+        }else if(accessType.equals("categoryStat")){
+            System.out.println("Category Stat");
+            StatisticService statisticService = new StatisticService();
+            JsonArray result = statisticService.categoryStat();
+            System.out.println(result.toString());
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
+
+        }else if(accessType.equals("top10Stat")){
+            System.out.println("top10 Stat");
+            StatisticService statisticService = new StatisticService();
+            JsonArray result = statisticService.top10Stat();
+            System.out.println(result.toString());
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
+
+        }else if(accessType.equals("memberStateStat")){
+            System.out.println("Member State Stat");
+            StatisticService statisticService = new StatisticService();
+            JsonArray result = statisticService.memberStateCount();
+            System.out.println(result.toString());
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
+
+        }else if(accessType.equals("memberStateStat")){
+            System.out.println("Member State Stat");
+            StatisticService statisticService = new StatisticService();
+            JsonArray result = statisticService.memberStateCount();
             System.out.println(result.toString());
 
             resp.setContentType("application/json");

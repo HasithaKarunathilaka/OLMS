@@ -79,12 +79,30 @@ public class MemberServlet extends HttpServlet {
             rateBean.setBookIDRate(req.getParameter("bookID"));
             rateBean.setMemberIDRate(req.getParameter("memberID"));
             rateBean.setPage(Integer.parseInt(req.getParameter("pageNo")));
-            rateBean.setRate(Integer.parseInt(req.getParameter("rate")));
+            rateBean.setRate(0);
             long pageTime = Long.parseLong(req.getParameter("pageTime"));
             rateBean.setTime(Long.parseLong(req.getParameter("totalTime")));
 
             EbookService ebookService = new EbookService();
             String result = ebookService.setPageStatistics(rateBean, pageTime);
+            System.out.println(result);
+
+//            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result);
+
+        }else if(type.equals("rateBook")){
+//            System.out.println("start");
+            RateBean rateBean = new RateBean();
+            rateBean.setBookIDRate(req.getParameter("bookID"));
+            System.out.println(rateBean.getBookIDRate());
+            rateBean.setMemberIDRate(req.getParameter("memberID"));
+            rateBean.setRate(Integer.parseInt(req.getParameter("rate")));
+
+            EbookService ebookService = new EbookService();
+            String result = ebookService.setRate(rateBean);
             System.out.println(result);
 
 //            resp.setContentType("application/json");

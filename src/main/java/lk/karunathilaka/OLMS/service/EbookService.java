@@ -206,4 +206,38 @@ public class EbookService {
         return result;
     }
 
+    public String setRate(RateBean rateBean) {
+        String result = "Error \n";
+        if(rateBean.getRate() > 0){
+            boolean resultSetResult = RateRepository.updateRate(rateBean);
+            if(resultSetResult){
+                Double resultGetRate = RateRepository.getAllRateOfBook(rateBean);
+                System.out.println(resultGetRate);
+
+                if(resultGetRate > 0.0){
+                    EbookBeen ebookBeen = new EbookBeen();
+                    ebookBeen.setBookID(rateBean.getBookIDRate());
+                    ebookBeen.setAvgRate(resultGetRate);
+
+                    boolean resultSetAvgRate = EbookRepository.updateEbook(ebookBeen, "setAvgRate");
+                    if(resultSetAvgRate){
+                        result = "success";
+                    }else{
+                        result = "Error \nError while Setting avgRate";
+                    }
+                }else{
+                    result = "Error \nCalculated Average Rate is 0.0";
+                }
+
+            }else{
+                result = "Error \nError while Updating Rate";
+            }
+
+        }else {
+            result = "Error \nError Given Rate is 0";
+        }
+        return result;
+
+    }
+
 }

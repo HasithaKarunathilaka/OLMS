@@ -63,6 +63,13 @@ public class EbookRepository {
 
                 ps.setString(1, ebookBeen.getAvailability());
                 ps.setString(2, ebookBeen.getBookID());
+
+            }else if(accessType.equals("setAvgRate")){
+                ps = conn.prepareStatement("UPDATE ebook SET avgRate = ? WHERE bookID = ?");
+
+                ps.setDouble(1, ebookBeen.getAvgRate());
+                ps.setString(2, ebookBeen.getBookID());
+
             }
 
             rs = ps.executeUpdate();
@@ -242,5 +249,68 @@ public class EbookRepository {
             DBConnectionPool.getInstance().close(conn);
         }
         return result;
+    }
+
+    public static int categoryCount(String category){
+        int categoryCount = 0;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(bookID) AS categoryCount FROM ebook WHERE category = ?");
+
+            ps.setString(1, category);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                categoryCount = rs.getInt("categoryCount");
+                System.out.println("while loop");
+            }
+            System.out.println("end member repo");
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return categoryCount;
+
+    }
+
+    public static JsonArray getTop10Rate(){
+        JsonArray top10 = new JsonArray();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+//        boolean result = false;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT avgRate, bookID FROM ebook ORDER BY avgRate DESC LIMIT 10");
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+               JsonObject bookRate = new JsonObject();
+               bookRate.addProperty("bookID", rs.getString("bookID"));
+               bookRate.addProperty("avgRate", rs.getDouble("avgRate"));
+               top10.add(bookRate);
+//                result = true;
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return top10;
     }
 }

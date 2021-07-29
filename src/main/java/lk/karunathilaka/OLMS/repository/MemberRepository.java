@@ -107,4 +107,66 @@ public class MemberRepository {
         }
         return memberBean;
     }
+
+    public static int genderCount(String gender){
+        int genderCount = 0;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(memberID) AS genderCount FROM member WHERE gender = ?");
+
+            ps.setString(1, gender);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                genderCount = rs.getInt("genderCount");
+                System.out.println("while loop");
+            }
+            System.out.println("end member repo");
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return genderCount;
+
+    }
+
+    public static int memberStateCount(String state){
+        int stateCount = 0;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT COUNT(memberID) AS stateCount FROM member WHERE state = ?");
+
+            ps.setString(1, state);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                stateCount = rs.getInt("stateCount");
+                System.out.println("while loop");
+            }
+            System.out.println("end member repo");
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return stateCount;
+
+    }
 }

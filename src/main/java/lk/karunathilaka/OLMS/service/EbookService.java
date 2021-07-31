@@ -17,6 +17,8 @@ import java.util.Calendar;
 
 public class EbookService {
     public String setEbook(Part filePart, Part filePartImage, EbookBeen ebookBeen){
+        ebookBeen.setPdfPath("F:\\Uni Aca\\Level 4\\Sem 1\\IT 4004 - Advanced Database Systems\\Project\\Backend\\OLMS\\out\\artifacts\\OLMS_war_exploded");
+        ebookBeen.setImagePath("F:\\Uni Aca\\Level 4\\Sem 1\\IT 4004 - Advanced Database Systems\\Project\\Backend\\OLMS\\out\\artifacts\\OLMS_war_exploded");
         FileService fileService = new FileService();
         boolean resultUploadEbook = fileService.uploadEbook(filePart, ebookBeen);
 
@@ -48,7 +50,7 @@ public class EbookService {
 
     }
 
-    public String approveEbook(ApprovalBean approvalBean){
+    public String approveEbook(ApprovalBean approvalBean, String approvalType){
         String result = "Error";
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -59,7 +61,12 @@ public class EbookService {
         if(resultApprove){
             EbookBeen ebookBeen = new EbookBeen();
             ebookBeen.setBookID(approvalBean.getItemID());
-            ebookBeen.setAvailability("available");
+
+            if(approvalType.equals("approve")){
+                ebookBeen.setAvailability("available");
+            }else {
+                ebookBeen.setAvailability("reject");
+            }
             boolean resultUpdateEbook = EbookRepository.updateEbook(ebookBeen, "approval");
 
             if(resultUpdateEbook){
@@ -237,6 +244,27 @@ public class EbookService {
             result = "Error \nError Given Rate is 0";
         }
         return result;
+
+    }
+
+    public JsonArray getAvailabilityBookList(EbookBeen ebookBeen){
+//        ebookBeen.setPublisherID("");
+//        ebookBeen.setBookID("");
+//        ebookBeen.setIsbn("");
+//        ebookBeen.setCategory("all");
+//        ebookBeen.setTitle("%%");
+//        ebookBeen.setAuthor("%%");
+
+//        JsonArray result = new JsonArray();
+        JsonArray result = EbookRepository.getAvailabilityBook(ebookBeen);
+
+        if(result.isEmpty()){
+            result.add("Error");
+
+        }
+        return result;
+
+//        return result;
 
     }
 

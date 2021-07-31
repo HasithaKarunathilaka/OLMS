@@ -31,6 +31,9 @@ public class MemberBean {
         this.state = state;
     }
 
+    public MemberBean() {
+    }
+
     public String getMemberID() {
         return memberID;
     }

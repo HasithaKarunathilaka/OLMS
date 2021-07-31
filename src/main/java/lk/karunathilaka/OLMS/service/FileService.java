@@ -1,6 +1,8 @@
 package lk.karunathilaka.OLMS.service;
 
 import lk.karunathilaka.OLMS.bean.EbookBeen;
+import org.apache.pdfbox.multipdf.Splitter;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javax.servlet.http.Part;
 import java.io.File;
@@ -9,6 +11,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Iterator;
+import java.util.List;
 //import org.apache.pdfbox.exceptions.CryptographyException;
 //import org.apache.pdfbox.exceptions.InvalidPasswordException;
 
@@ -29,31 +33,32 @@ public class FileService {
             // Open document
             InputStream inputStream = filePart.getInputStream();
 //            Document pdfDocument = new Document(inputStream);
-//            PDDocument pdDocument = PDDocument.load(inputStream);
-//            System.out.println("Page Count is: " + pdDocument.getPages().getCount());
-//
-//            Splitter splitter = new Splitter();
-//
-//            List<PDDocument> Page = splitter.split(pdDocument);
-//
-//            Iterator<PDDocument> iteration = Page.listIterator();
+            PDDocument pdDocument = PDDocument.load(inputStream);
+            System.out.println("Page Count is: " + pdDocument.getPages().getCount());
+            ebookBeen.setPages(String.valueOf(pdDocument.getPages().getCount()));
+
+            Splitter splitter = new Splitter();
+
+            List<PDDocument> Page = splitter.split(pdDocument);
+
+            Iterator<PDDocument> iteration = Page.listIterator();
 
 // For page counter
             int pageCount = 1;
 
 // Loop through all the pages
-//            while(iteration.hasNext()){
-//                PDDocument pd = iteration.next();
-//                pd.save(uploadPath + File.separator + pageCount + ".pdf");
-//                pageCount++;
-////                System.out.println("while");
-//                result = true;
-//                pd.close();
+            while(iteration.hasNext()){
+                PDDocument pd = iteration.next();
+                pd.save(uploadPath + File.separator + pageCount + ".pdf");
+                pageCount++;
+//                System.out.println("while");
+                result = true;
+                pd.close();
 
-//            }
+            }
 //            iteration.remove();
 //            Page.clear();
-//            pdDocument.close();
+            pdDocument.close();
 //            for (PDPage pdfPage : pdDocument.getPages()) {
 //                // Create a new document
 //                Document newDocument = new Document();

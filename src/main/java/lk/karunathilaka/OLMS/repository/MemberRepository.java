@@ -1,5 +1,7 @@
 package lk.karunathilaka.OLMS.repository;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import lk.karunathilaka.OLMS.bean.MemberBean;
 import lk.karunathilaka.OLMS.bean.UserBean;
 import lk.karunathilaka.OLMS.db.DBConnectionPool;
@@ -168,5 +170,79 @@ public class MemberRepository {
         }
         return stateCount;
 
+    }
+
+    public static JsonArray getStateMember(MemberBean memberBean){
+        JsonArray result = new JsonArray();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+//        boolean result = false;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT * FROM member WHERE state = ?");
+            ps.setString(1, memberBean.getState());
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                JsonObject memberDetail = new JsonObject();
+                memberDetail.addProperty("memberID", rs.getString("memberID"));
+                memberDetail.addProperty("name", rs.getString("fName") + " " + rs.getString("lName"));
+                result.add(memberDetail);
+//                result = true;
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return result;
+    }
+
+    public static boolean updateMember(MemberBean memberBean, String accessType){
+        boolean result = false;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int rs = 0;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+
+            if(accessType.equals("approve")){
+                ps = conn.prepareStatement("UPDATE member SET membershipDate = ?, expireDate = ?, state = ? WHERE memberID = ?");
+
+                ps.setString(1, memberBean.getMembershipDate());
+                ps.setString(2, memberBean.getExpireDate());
+                ps.setString(3, memberBean.getState());
+                ps.setString(4, memberBean.getMemberID());
+
+            }else if(accessType.equals("reject")){
+                ps = conn.prepareStatement("UPDATE member SET state = ? WHERE memberID = ?");
+
+                ps.setString(1, memberBean.getState());
+                ps.setString(2, memberBean.getMemberID());
+
+            }
+
+            rs = ps.executeUpdate();
+            if(rs > 0){
+                result = true;
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+//            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return result;
     }
 }

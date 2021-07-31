@@ -1,5 +1,7 @@
 package lk.karunathilaka.OLMS.repository;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import lk.karunathilaka.OLMS.bean.PublisherBean;
 import lk.karunathilaka.OLMS.bean.UserBean;
 import lk.karunathilaka.OLMS.db.DBConnectionPool;
@@ -127,5 +129,68 @@ public class PublisherRepository {
         }
         return stateCount;
 
+    }
+
+    public static JsonArray getStatePublisher(PublisherBean publisherBean){
+        JsonArray result = new JsonArray();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+//        boolean result = false;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT * FROM publisher WHERE state = ?");
+            ps.setString(1, publisherBean.getState());
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                JsonObject publisherDetail = new JsonObject();
+                publisherDetail.addProperty("publisherID", rs.getString("publisherID"));
+                publisherDetail.addProperty("name", rs.getString("name"));
+                result.add(publisherDetail);
+//                result = true;
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return result;
+    }
+
+    public static boolean updatePublisher(PublisherBean publisherBean){
+        boolean result = false;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int rs = 0;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+
+            ps = conn.prepareStatement("UPDATE publisher SET state = ? WHERE publisherID = ?");
+
+            ps.setString(1, publisherBean.getState());
+            ps.setString(2, publisherBean.getPublisherID());
+
+            rs = ps.executeUpdate();
+            if(rs > 0){
+                result = true;
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+//            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return result;
     }
 }

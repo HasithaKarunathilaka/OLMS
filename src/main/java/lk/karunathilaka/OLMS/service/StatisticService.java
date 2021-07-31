@@ -61,10 +61,12 @@ public class StatisticService {
         JsonArray result = new JsonArray();
         int active = MemberRepository.memberStateCount("active member");
         int inactive = MemberRepository.memberStateCount("inactive");
+        int reject = MemberRepository.memberStateCount("reject");
         int pending = MemberRepository.memberStateCount("pending");
-        if(active >=0 && inactive >= 0 && pending >=0){
+        if(active >=0 && inactive >= 0 && pending >=0 && reject >= 0){
             result.add(active);
             result.add(inactive);
+            result.add(reject);
             result.add(pending);
 
         }else {

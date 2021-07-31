@@ -2,13 +2,8 @@ package lk.karunathilaka.OLMS.controller;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import lk.karunathilaka.OLMS.bean.ApprovalBean;
-import lk.karunathilaka.OLMS.bean.BookBean;
-import lk.karunathilaka.OLMS.bean.BorrowBean;
-import lk.karunathilaka.OLMS.service.BookService;
-import lk.karunathilaka.OLMS.service.DashboardService;
-import lk.karunathilaka.OLMS.service.EbookService;
-import lk.karunathilaka.OLMS.service.StatisticService;
+import lk.karunathilaka.OLMS.bean.*;
+import lk.karunathilaka.OLMS.service.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -96,13 +91,45 @@ public class StaffServlet extends HttpServlet {
 //            jsonObject.addProperty("Response", String.valueOf(result));
             printWriter.print(result.toString());
 
-        }
-        else if(accessType.equals("approveEbook")){
+        }else if(accessType.equals("approveEbook")){
             ApprovalBean approvalBean = new ApprovalBean();
             approvalBean.setItemID(req.getParameter("bookID"));
             approvalBean.setApprovedBy(req.getParameter("staffID"));
             EbookService ebookService = new EbookService();
-            String result = ebookService.approveEbook(approvalBean);
+            String result = ebookService.approveEbook(approvalBean, req.getParameter("approvalType"));
+            System.out.println(result);
+
+//            JsonArray result = bookService.returnBook(borrowBean);
+
+//            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result);
+
+        }else if(accessType.equals("approveMember")){
+            ApprovalBean approvalBean = new ApprovalBean();
+            approvalBean.setItemID(req.getParameter("memberID"));
+            System.out.println(approvalBean.getItemID());
+            approvalBean.setApprovedBy(req.getParameter("staffID"));
+            MemberService memberService = new MemberService();
+            String result = memberService.approveMember(approvalBean, req.getParameter("approvalType"));
+            System.out.println(result);
+
+//            JsonArray result = bookService.returnBook(borrowBean);
+
+//            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result);
+
+        }else if(accessType.equals("approvePublisher")){
+            ApprovalBean approvalBean = new ApprovalBean();
+            approvalBean.setItemID(req.getParameter("publisherID"));
+            approvalBean.setApprovedBy(req.getParameter("staffID"));
+            PublisherService publisherService = new PublisherService();
+            String result = publisherService.approvePublisher(approvalBean, req.getParameter("approvalType"));
             System.out.println(result);
 
 //            JsonArray result = bookService.returnBook(borrowBean);
@@ -239,6 +266,43 @@ public class StaffServlet extends HttpServlet {
             DashboardService dashboardService = new DashboardService();
             JsonArray result = dashboardService.dashboardOnLoad();
             System.out.println(result.toString());
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
+
+        }else if(accessType.equals("getPendingBookList")){
+            System.out.println("pending Book list");
+            EbookBeen ebookBeen = new EbookBeen();
+            ebookBeen.setAvailability(req.getParameter("availability"));
+            EbookService ebookService = new EbookService();
+            JsonArray result = ebookService.getAvailabilityBookList(ebookBeen);
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
+
+        }else if(accessType.equals("getPendingMemberList")){
+            MemberBean memberBean = new MemberBean();
+            memberBean.setState(req.getParameter("availability"));
+            MemberService memberService = new MemberService();
+            JsonArray result = memberService.getStateMemberList(memberBean);
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
+
+        }else if(accessType.equals("getPendingPublisherList")){
+            PublisherBean publisherBean = new PublisherBean();
+            publisherBean.setState(req.getParameter("availability"));
+            PublisherService publisherService = new PublisherService();
+            JsonArray result = publisherService.getStatePublisherList(publisherBean);
 
             resp.setContentType("application/json");
             PrintWriter printWriter = resp.getWriter();

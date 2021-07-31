@@ -156,7 +156,7 @@ public class RateRepository {
 
             while(rs.next()){
                 rateBean.setTime(rs.getLong("totalTime"));
-                rateBean.setPage(rs.getInt("totalPage"));
+                rateBean.setPage(rs.getInt("totalPages"));
                 result = true;
             }
 

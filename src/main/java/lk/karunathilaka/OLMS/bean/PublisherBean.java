@@ -15,6 +15,9 @@ public class PublisherBean {
         this.state = state;
     }
 
+    public PublisherBean() {
+    }
+
     public String getPublisherID() {
         return publisherID;
     }

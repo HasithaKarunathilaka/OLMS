@@ -206,6 +206,8 @@ public class EbookRepository {
                 bookDetails.addProperty("publishedDate", rs.getString("publishedDate"));
                 bookDetails.addProperty("avgRate", rs.getString("avgRate"));
                 bookDetails.addProperty("views", rs.getString("totNumberOfViews"));
+                bookDetails.addProperty("maxPage", rs.getInt("maxPage"));
+                bookDetails.addProperty("maxTime", rs.getLong("maxTime"));
                 searchResultBooks.add(bookDetails);
             }
 
@@ -343,5 +345,85 @@ public class EbookRepository {
         }
         return availabilityCount;
 
+    }
+
+    public static JsonArray getAvailabilityBook(EbookBeen ebookBeen){
+        JsonArray result = new JsonArray();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+//        boolean result = false;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT * FROM ebook WHERE availability = ?");
+            ps.setString(1, ebookBeen.getAvailability());
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                JsonObject bookDetail = new JsonObject();
+                bookDetail.addProperty("bookID", rs.getString("bookID"));
+                bookDetail.addProperty("title", rs.getString("title"));
+                bookDetail.addProperty("publisherID", rs.getString("publisherID"));
+                result.add(bookDetail);
+//                result = true;
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return result;
+    }
+
+    public static JsonArray getPublishersBook(EbookBeen ebookBeen){
+        JsonArray result = new JsonArray();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+//        boolean result = false;
+
+        try{
+            conn = DBConnectionPool.getInstance().getConnection();
+            ps = conn.prepareStatement("SELECT * FROM ebook WHERE publisherID = ?");
+            ps.setString(1, ebookBeen.getPublisherID());
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                JsonObject bookDetails = new JsonObject();
+                bookDetails.addProperty("bookID", rs.getString("bookID"));
+//                bookDetails.addProperty("isbn", rs.getString("isbn"));
+                bookDetails.addProperty("title", rs.getString("title"));
+                bookDetails.addProperty("author", rs.getString("author"));
+//                bookDetails.addProperty("category", rs.getString("category"));
+//                bookDetails.addProperty("pages", rs.getString("pages"));
+                bookDetails.addProperty("availability", rs.getString("availability"));
+//                bookDetails.addProperty("pdfPath", rs.getString("pdfPath"));
+//                bookDetails.addProperty("imagePath", rs.getString("imagePath"));
+//                bookDetails.addProperty("publisherID", rs.getString("publisherID"));
+//                bookDetails.addProperty("publishedDate", rs.getString("publishedDate"));
+//                bookDetails.addProperty("avgRate", rs.getString("avgRate"));
+//                bookDetails.addProperty("views", rs.getString("totNumberOfViews"));
+//                bookDetails.addProperty("maxPage", rs.getInt("maxPage"));
+//                bookDetails.addProperty("maxTime", rs.getLong("maxTime"));
+                result.add(bookDetails);
+//                result = true;
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+
+        }finally{
+            DBConnectionPool.getInstance().close(rs);
+            DBConnectionPool.getInstance().close(ps);
+            DBConnectionPool.getInstance().close(conn);
+        }
+        return result;
     }
 }

@@ -1,6 +1,8 @@
 package lk.karunathilaka.OLMS.controller;
 
+import com.google.gson.JsonArray;
 import lk.karunathilaka.OLMS.bean.EbookBeen;
+import lk.karunathilaka.OLMS.repository.EbookRepository;
 import lk.karunathilaka.OLMS.service.EbookService;
 
 import javax.servlet.ServletException;
@@ -49,6 +51,29 @@ public class PublisherServlet extends HttpServlet {
 //            JsonObject jsonObject = new JsonObject();
 //            jsonObject.addProperty("Response", result);
             printWriter.print(result);
+
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        super.doGet(req, resp);
+
+        String accessType = req.getParameter("type");
+
+        if(accessType.equals("searchEbook")){
+            EbookBeen ebookBeen =new EbookBeen();
+            ebookBeen.setPublisherID(req.getParameter("publisherID"));
+//            ebookBeen.setPdfPath(req.getServletContext().getRealPath(""));
+
+//            EbookService ebookService = new EbookService();
+            JsonArray result = EbookRepository.getPublishersBook(ebookBeen);
+
+            resp.setContentType("application/json");
+            PrintWriter printWriter = resp.getWriter();
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("Response", String.valueOf(result));
+            printWriter.print(result.toString());
 
         }
     }

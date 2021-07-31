@@ -148,6 +148,8 @@ public class BookService {
         if(selectBorrowBook){
             System.out.println("if select borrow book");
             String resultDateCheck = null;
+
+//            ------  Get Today Date  ------
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Calendar calendar = Calendar.getInstance();
             borrowBean.setReturnedDate(simpleDateFormat.format(calendar.getTime()));
